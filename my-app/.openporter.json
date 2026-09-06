@@ -1,0 +1,7 @@
+{
+  "repo": "SerafimZurianov/TaskBoard",
+  "branch": "main",
+  "framework": "react",
+  "nodeVersion": "22",
+  "packageManager": "npm"
+}
