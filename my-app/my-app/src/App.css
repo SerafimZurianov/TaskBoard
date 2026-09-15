@@ -9,7 +9,6 @@ html, body {
     width: 100vw;
     margin: 0 auto;
 }
-
 .container {
     max-width: 1310px;
     padding: 0 15px;
@@ -42,7 +41,6 @@ html, body {
     align-items: center;
     background-color: #20B2AA;
 }
-
 .header__inner {
     display: flex;
     height: 100%;
@@ -50,19 +48,16 @@ html, body {
     align-items: center;
     margin: 0 3vw;
 }
-
 .logo {
     font-family: BitcountPropSingle;
     font-weight: 400;
     font-size: 32px;
     color: white;
 }
-
 .user-info {
     display: flex;
     align-items: center;
 }
-
 .user__icon {
     display: block;
     width: 25px;
@@ -70,19 +65,21 @@ html, body {
     border-radius: 50%;
     object-fit: cover;
     margin-right: 10px;
-}
 
+}
+.user__name {
+
+}
 .user__buttons {
     display: flex;
     margin: 0 10px;
 }
-
 .user__buttons :first-child {
     margin-right: 10px;
 }
-
 /* ----------------------------------------------------first section------------------------------------- */
-
+.main__options {
+}
 .options__inner {
     padding: 5px 10px;
     display: flex;
@@ -91,26 +88,33 @@ html, body {
     background: #2F4F4F;
     align-items: center;
 }
-
+.buttons-container {
+}
+.buttons {
+}
+.create__button {
+}
 .options__trash {
     min-width: 500px;
     min-height: 100px;
 }
+.trash__container {
+}
 
 /* -------------------------------------boards--------------------------------- */
 
+.main__boards {
+}
 .boards__inner {
     display: flex;
     margin-top: 20px;
     justify-content: space-around;
 }
-
 .board {
     display: flex;
     flex-direction: column;
     
 }
-
 .board-header {
     font-size: 20px;
     font-weight: 700;
@@ -120,14 +124,12 @@ html, body {
     justify-content: center;
     align-items: center;
 }
-
 .board-container {
     border: 5px solid rgba(9, 9, 9, 0.3);
     border-top: none;
     min-height: 100px;
     height: 100%;
 }
-
 .boards__active {
     background-color: palevioletred;
     width: 40vw;
@@ -135,7 +137,11 @@ html, body {
     height: fit-content;
     flex: 0 1 auto;
 }
+.active-header {
 
+}
+.active-container {
+}
 .boards__freeze {
     position: relative;
     background-color: lightskyblue;
@@ -143,4 +149,8 @@ html, body {
     min-height: 100px;
     height: fit-content;
     flex: 0 1 auto;
+}
+.freeze-header {
+}
+.freeze-container {
 }

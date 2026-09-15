@@ -4,7 +4,3 @@ export interface Task {
     taskInfo: string;
     taskDeadline: string;
 }
-
-export interface FreezeTask extends Task {
-    frozenAt: number;
-}

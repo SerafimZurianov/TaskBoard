@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import moment from 'moment-timezone';
 import './TaskModal.css'
 import type { Task } from '../types';
-import crossIcon from '../images/cross.svg';
 
 interface TaskModalProps {
 	setIsOpen: (value: boolean) => void;
@@ -98,11 +97,9 @@ const TaskModal = ({ setIsOpen, OnCreateTask }: TaskModalProps) => {
 			<div className='modal-header'>
 				<span className='modal-name'>Create Task</span>
 				<button 
-					className='close-button button'
+					className='close-button'
 					onClick={() => {setIsOpen(false)}}
-				>
-					<img className='cross-image' src={crossIcon} alt="Cross"/>
-				</button>
+				></button>
 			</div>
 			<form className='modal-container' onSubmit={handleSubmit}>
 				<span className='description'>Create name:</span>
@@ -110,7 +107,6 @@ const TaskModal = ({ setIsOpen, OnCreateTask }: TaskModalProps) => {
 					<input 
 						className='name-input' 
 						type="text" 
-						maxLength = {20}
 						value={taskCreateDate.taskName}
 						onChange={setNameData}
 						placeholder='Task Name'/>
@@ -120,7 +116,6 @@ const TaskModal = ({ setIsOpen, OnCreateTask }: TaskModalProps) => {
 				<div className='task-info'>
 					<textarea 
 						className='info-input' 
-						maxLength = {300}
 						value={taskCreateDate.taskInfo}
 						onChange={setInfoData}
 						placeholder='Task info'></textarea>
