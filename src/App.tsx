@@ -65,10 +65,10 @@ function App() {
 				<div className='header__inner'>
 					<h1 className='logo'>TaskBoard</h1>
 					<div className='user-info'>
-						<div className='user__buttons'>
+						{/* <div className='user__buttons'>
 							<button className='button'>Register</button>
 							<button className='button'>Login</button>
-						</div>
+						</div> */}
 					</div>
 				</div>
 			</header>
