@@ -33,14 +33,21 @@
     }
 }
 
+
+
 .task-name {
-    font-size: 18px;
+    display: flex;
+    font-size: 22px;
+    font-weight: 400;
     justify-self: center;
-    padding-bottom: 3px;
+    align-items: center;
+    text-align: center;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    margin-bottom: 5px;
 }
 
 .task-info {
-    padding: 0px 90px;
     display: inline-block;
     text-align: center;
     justify-self: center;
@@ -56,47 +63,50 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 5px;
 }
 
 .deadline-date {
+    text-align: center;
     font-size: 18px;
 }
 
 .deadline-time {
     font-size: 22px;
     color: rgb(117, 114, 114);
+    text-align: center;
 }
 
 .deadline-endtime {
     font-size: 22px;
     color: red;
+    text-align: center;
 }
 
 .deadline-freezetime {
     font-size: 22px;
     color: rgb(67, 158, 250);
+    text-align: center;
+}
+
+.task-buttons {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    align-items: center;
 }
 
 .delete-button {
-    position: absolute;
-    left: 5px;
-    top: 5px;
-    min-width: 40px;
-    min-height: 40px;
+    min-width: 36px;
+    justify-self: center;
 }
 
 .accept-button {
-    position: absolute;
-    left: 5px;
-    top: 5px;
-    min-width: 40px;
-    min-height: 40px;
+    min-width: 36px;
 }
 
 .freeze-button {
-    position: absolute;
-    right: 5px;
-    top: 5px;
+    margin-left: auto;
 }
 .freeze-button:hover {
     border-color: #0e3adb;
@@ -104,9 +114,7 @@
 }
 
 .unfreeze-button {
-    position: absolute;
-    right: 5px;
-    top: 5px;
+    margin-left: auto;
 }
 
 .delete-image {

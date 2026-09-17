@@ -94,58 +94,58 @@ const TaskModal = ({ setIsOpen, OnCreateTask }: TaskModalProps) => {
 	};
 
 	return (
-		<div className='modal'>
-			<div className='modal-header'>
-				<span className='modal-name'>Create Task</span>
-				<button 
-					className='close-button button'
-					onClick={() => {setIsOpen(false)}}
-				>
-					<img className='cross-image' src={crossIcon} alt="Cross"/>
-				</button>
+		<div className='modal-owerlay'>
+			<div className='modal'>
+				<div className='modal-header'>
+					<span className='modal-logo'>Create Task</span>
+					<button 
+						className='close-button button'
+						onClick={() => {setIsOpen(false)}}
+					>
+						<img className='cross-image' src={crossIcon} alt="Cross"/>
+					</button>
+				</div>
+				<form className='modal-container' onSubmit={handleSubmit}>
+					<span className='description'>Create name:</span>
+					<div className='modal-name'>
+						<input 
+							className='name-input' 
+							type="text" 
+							maxLength = {30}
+							value={taskCreateDate.taskName}
+							onChange={setNameData}
+							placeholder='Task Name'/>
+						{error.name && <span className='error'>Enter name!</span>}
+					</div>
+					<span className='description'>Task description:</span>
+					<div className='modal-info'>
+						<textarea 
+							className='info-input' 
+							maxLength = {300}
+							value={taskCreateDate.taskInfo}
+							onChange={setInfoData}
+							placeholder='Task info'></textarea>
+						{error.info && <span className='error'>Enter info!</span>}
+					</div>
+					<span className='description'>Task deadline:</span>
+					<div className='modal-deadline'>
+						<input 
+							className='deadline-input' 
+							type='datetime-local'  
+							value={taskCreateDate.taskDeadline}
+							onChange={setDeadlineData}
+							min={minDate}
+							placeholder=''/>
+						{error.deadline && <span className='error'>Enter deadline!</span>}
+						{error.deadlineBefore && <span className='error'>The time must be no later than {moment.tz(moment.tz.guess()).format('HH:mm')}!</span>}
+					</div>
+					<button 
+						type='submit'
+						className='button create-button'
+					>Create</button>
+				</form>
 			</div>
-			<form className='modal-container' onSubmit={handleSubmit}>
-				<span className='description'>Create name:</span>
-				<div className='task-name'>
-					<input 
-						className='name-input' 
-						type="text" 
-						maxLength = {20}
-						value={taskCreateDate.taskName}
-						onChange={setNameData}
-						placeholder='Task Name'/>
-					{error.name && <span className='error'>Enter name!</span>}
-				</div>
-				<span className='description'>Task description:</span>
-				<div className='task-info'>
-					<textarea 
-						className='info-input' 
-						maxLength = {300}
-						value={taskCreateDate.taskInfo}
-						onChange={setInfoData}
-						placeholder='Task info'></textarea>
-					{error.info && <span className='error'>Enter info!</span>}
-				</div>
-				<span className='description'>Task deadline:</span>
-				<div className='task-deadline'>
-					<input 
-						className='deadline-input' 
-						type='datetime-local'  
-						value={taskCreateDate.taskDeadline}
-						onChange={setDeadlineData}
-						min={minDate}
-						placeholder=''/>
-					{error.deadline && <span className='error'>Enter deadline!</span>}
-					{error.deadlineBefore && <span className='error'>The time must be no later than {moment.tz(moment.tz.guess()).format('HH:mm')}!</span>}
-				</div>
-				<button 
-					type='submit'
-					className='button create-button'
-				>Create</button>
-			</form>
 		</div>
-
-
 	);
 }
 

@@ -64,14 +64,12 @@ function App() {
 			<header className='header'>
 				<div className='header__inner'>
 					<h1 className='logo'>TaskBoard</h1>
-					{/* <div className='user-info'>
-						<img className='user__icon' src={userAvatar} alt="UserIcon" />
-						<span className='user__name'>Серафим</span>
+					<div className='user-info'>
 						<div className='user__buttons'>
 							<button className='button'>Register</button>
 							<button className='button'>Login</button>
 						</div>
-					</div> */}
+					</div>
 				</div>
 			</header>
 			
@@ -124,7 +122,7 @@ function App() {
 					</div>
 				</div>
 			</section>
-			{isModalOpen && <TaskModal 
+			{isModalOpen &&  <TaskModal 
 				setIsOpen = {SetIsModalOpen}
 				OnCreateTask = {handleCreateTask}/>}
 			

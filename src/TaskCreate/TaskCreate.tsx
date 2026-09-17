@@ -54,25 +54,28 @@ const TaskCreate = ( {id, taskName, taskInfo, taskDeadline, onDelete, onFreeze, 
 
     return (
         <div className={`task-container ${isTimeout && 'task-timeout'} ${isFreeze && 'task-freeze'}`}>
-            <span className="task-name">{taskName}</span>
-                <span className="task-info">{taskInfo}</span>
-                <div className="deadline">
-                    <span className="deadline-date">{taskDate} {taskTime}</span>
-                    <div className = {`${timeLeft.days === 0 && timeLeft.hours === 0 ? 'deadline-endtime' : 'deadline-time'} ${isFreeze && 'deadline-freezetime'}`}>
-                        {timeLeft.days > 0 ? `${timeLeft.days} days `: null}
-                        {timeLeft.hours > 0 ? `${timeLeft.hours > 9 ? `${timeLeft.hours}` : `0${timeLeft.hours}`}:` : null}
-                        {timeLeft.minutes > 9 ? `${timeLeft.minutes}` : `0${timeLeft.minutes}`}:
-                        {timeLeft.seconds > 9 ? `${timeLeft.seconds}` : `0${timeLeft.seconds}`}
-                    </div>
+            <div className="task-name">
+                <span>{taskName}</span>   
+            </div>
+            <span className="task-info">{taskInfo}</span>
+            <div className="deadline">
+                <span className="deadline-date">{taskDate} {taskTime}</span>
+                <div className = {`${timeLeft.days === 0 && timeLeft.hours === 0 ? 'deadline-endtime' : 'deadline-time'} ${isFreeze && 'deadline-freezetime'}`}>
+                    {timeLeft.days > 0 ? `${timeLeft.days} days `: null}
+                    {timeLeft.hours > 0 ? `${timeLeft.hours > 9 ? `${timeLeft.hours}` : `0${timeLeft.hours}`}:` : null}
+                    {timeLeft.minutes > 9 ? `${timeLeft.minutes}` : `0${timeLeft.minutes}`}:
+                    {timeLeft.seconds > 9 ? `${timeLeft.seconds}` : `0${timeLeft.seconds}`}
                 </div>
+            </div>
+            <div className='task-buttons'>
                 {isTimeout &&<button 
-                className='delete-button button' 
-                onClick = {() => onDelete(id, 'Delete')}>
+                    className='delete-button button' 
+                    onClick = {() => onDelete(id, 'Delete')}>
                     <img className='delete-image' src={trashIcon} alt="Trash"/>
                 </button>}
                 {!isTimeout && !isFreeze && <button 
-                className='accept-button button'
-                onClick = {() => onDelete(id, 'Сomplete the')}>
+                    className='accept-button button'
+                    onClick = {() => onDelete(id, 'Сomplete the')}>
                     <img className='accept-image' src={acceptIcon} alt="Accept"/>
                 </button>}
                 {!isTimeout && !isFreeze &&
@@ -83,6 +86,7 @@ const TaskCreate = ( {id, taskName, taskInfo, taskDeadline, onDelete, onFreeze, 
                 <button 
                     className='unfreeze-button button'
                     onClick = {() => onFreeze(id)}>unfreeze</button>}
+            </div>
         </div>
     );
 };
