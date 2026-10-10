@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import moment from 'moment-timezone';
 import './TaskModal.css'
 import type { Task } from '../types';
 import crossIcon from '../images/cross.svg';
@@ -51,9 +50,8 @@ const TaskModal = ({ setIsOpen, OnCreateTask, submitError }: TaskModalProps) => 
 			newErrors.deadline = true;
 		}
 		else {
-			const currentTime = moment.tz(moment.tz.guess()).format('YYYY-MM-DDTHH:mm')
 
-			if (new Date(taskCreateDate.taskDeadline).getTime() <= new Date(currentTime).getTime()) {
+			if (new Date(taskCreateDate.taskDeadline).getTime() <= Date.now()) {
 				newErrors.deadlineBefore = true;
 			}
 		}
@@ -115,7 +113,7 @@ const TaskModal = ({ setIsOpen, OnCreateTask, submitError }: TaskModalProps) => 
 							min={minDate}
 							placeholder=''/>
 						{error.deadline && <span className='error'>Enter deadline!</span>}
-						{error.deadlineBefore && <span className='error'>The time must be no later than {moment.tz(moment.tz.guess()).format('HH:mm')}!</span>}
+						{error.deadlineBefore && <span className='error'>The time must be no later than {new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}!</span>}
 						{submitError && <span className='error'>{submitError}</span>}
 					</div>
 					<button 
