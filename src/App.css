@@ -25,12 +25,19 @@ html, body {
     padding: 3px;
     justify-content: center;
     align-items: center;
+    white-space: nowrap;
 }
 
 .button:hover {
     border-color: #DC143C;
     color: #DC143C;
     scale: 1.05;
+}
+
+.message {
+    font-size: 18px;
+    opacity: 0.7;
+    margin: auto;
 }
 
 /* -----------------------------------------header-------------------------------------------------- */
@@ -70,6 +77,16 @@ html, body {
     border-radius: 50%;
     object-fit: cover;
     margin-right: 10px;
+}
+
+.user-login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.user-email {
+    margin-right: 5px;
 }
 
 .user__buttons {
@@ -125,6 +142,8 @@ html, body {
 }
 
 .board-container {
+    display: flex;
+    flex-direction: column;
     border: 5px solid rgba(9, 9, 9, 0.3);
     border-top: none;
     min-height: 100px;
@@ -196,6 +215,15 @@ html, body {
     }
 
     .user__buttons {
+        margin-bottom: 5px;
+    }
+
+    .user-login {
+        margin-bottom: 5px;
+        flex-direction: column;
+    }
+
+    .user-email {
         margin-bottom: 5px;
     }
 }

@@ -12,9 +12,10 @@ interface TaskCreateProps {
     onDelete: (id: string, messenge: string) => void;
     onFreeze: (id: string) => void;
     isFreeze: boolean;
+    frozenAt: string | null;
 }
 
-const TaskCreate = ( {id, taskName, taskInfo, taskDeadline, onDelete, onFreeze, isFreeze}: TaskCreateProps ) => {
+const TaskCreate = ( {id, taskName, taskInfo, taskDeadline, onDelete, onFreeze, isFreeze, frozenAt}: TaskCreateProps ) => {
     const [timeLeft, setTimeLeft ] = useState({
         seconds: 0,
         minutes: 0,
@@ -26,7 +27,7 @@ const TaskCreate = ( {id, taskName, taskInfo, taskDeadline, onDelete, onFreeze, 
 
     useEffect(() => {
         const tick = () => {
-            const currentTime = moment.tz(moment.tz.guess()).format('YYYY-MM-DDTHH:mm:ss')
+            const currentTime = isFreeze && frozenAt ? new Date(frozenAt) : new Date();
             const diff = new Date(taskDeadline).getTime() - new Date(currentTime).getTime();
             if (diff >= 0) {
                 setTimeLeft({

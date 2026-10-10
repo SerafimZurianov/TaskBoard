@@ -1,0 +1,87 @@
+.authform-owerlay {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    inset: 0;
+    z-index: 999;
+}
+.authform {
+    display: flex;
+    flex-direction: column;
+    background-color: lightyellow;
+    width: min(600px, 98vw);
+    height: 45vh;
+    border: 5px solid #2F4F4F;
+}
+.authform-header {
+    display: flex;
+    padding: 5px;
+    background-color: #20B2AA;
+}
+.authform-logo {
+    margin: 0 auto;
+    font-weight: 700;
+    font-size: 20px;
+}
+.close-button {
+}
+.button {
+}
+.authform-container {
+    overflow-y: auto;
+    display: grid;
+    height: 100%;
+    grid-template-rows: max-content max-content max-content max-content 1fr;
+    grid-template-columns: 3fr 5fr;
+    gap: 10px;
+    justify-content: left;
+    align-items: center;
+    padding: 10px;
+    font-size: 18px;
+}
+.description {
+}
+.authform-email {
+    display: block;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+}
+.email-input {
+    font-size: 18px;
+    width: 100%;
+    height: 25px;
+}
+.authform-password {
+    display: block;
+    height: 100%;
+    width: 100%;
+    min-width: 0;
+}
+.password-input {
+    font-size: 18px;
+    width: 100%;
+    height: 25px;
+}
+.error {
+    grid-column: 1 / 3;
+    justify-self: center;
+    align-self: self-start;
+    text-align: center;
+}
+
+.submit-button {
+    grid-row: 5;
+    grid-column: 1 / 3;
+    justify-self: center;
+    align-self: self-end;
+}
+
+/* ---------- mobile ---------- */
+@media (max-width: 480px) {
+    .authform-container {
+        font-size: 16px;
+        gap: 6px;
+    } 
+}

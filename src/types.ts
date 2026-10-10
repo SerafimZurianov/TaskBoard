@@ -3,8 +3,11 @@ export interface Task {
     taskName: string;
     taskInfo: string;
     taskDeadline: string;
+    isFrozen: boolean;
+    frozenAt: string | null
 }
 
-export interface FreezeTask extends Task {
-    frozenAt: number;
+export interface User {
+    id: string;
+    email: string
 }

@@ -7,9 +7,10 @@ import crossIcon from '../images/cross.svg';
 interface TaskModalProps {
 	setIsOpen: (value: boolean) => void;
 	OnCreateTask: (task: Task) => void;
+	submitError: string | null;
 }
 
-const TaskModal = ({ setIsOpen, OnCreateTask }: TaskModalProps) => {
+const TaskModal = ({ setIsOpen, OnCreateTask, submitError }: TaskModalProps) => {
 	
 	const [minDate, setMinDate] = useState('');
 
@@ -21,33 +22,10 @@ const TaskModal = ({ setIsOpen, OnCreateTask }: TaskModalProps) => {
 		taskName: '',
 		taskInfo: '',
 		taskDeadline: '',
-		id: ''
+		id: '',
+		isFrozen: false,
+		frozenAt: ''
 	});
-
-	const setNameData = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setTaskCreateData(prev => ({
-			...prev,
-			taskName: event.target.value
-		}));
-		console.log(taskCreateDate);
-	};
-
-	const setInfoData = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-		setTaskCreateData(prev => ({
-			...prev,
-			taskInfo: event.target.value
-		}));
-		console.log(taskCreateDate);
-	};
-
-	const setDeadlineData = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setTaskCreateData(prev => ({
-			...prev,
-			taskDeadline: event.target.value
-		}));
-		console.log(taskCreateDate);
-	};
-
 	
 	const [error, setError] = useState({
 		name: false,
@@ -113,7 +91,7 @@ const TaskModal = ({ setIsOpen, OnCreateTask }: TaskModalProps) => {
 							type="text" 
 							maxLength = {30}
 							value={taskCreateDate.taskName}
-							onChange={setNameData}
+							onChange={(event) => setTaskCreateData(prev => ({...prev, taskName: event.target.value}))}
 							placeholder='Task Name'/>
 						{error.name && <span className='error'>Enter name!</span>}
 					</div>
@@ -123,7 +101,7 @@ const TaskModal = ({ setIsOpen, OnCreateTask }: TaskModalProps) => {
 							className='info-input' 
 							maxLength = {300}
 							value={taskCreateDate.taskInfo}
-							onChange={setInfoData}
+							onChange={(event) => setTaskCreateData(prev => ({...prev, taskInfo: event.target.value}))}
 							placeholder='Task info'></textarea>
 						{error.info && <span className='error'>Enter info!</span>}
 					</div>
@@ -133,11 +111,12 @@ const TaskModal = ({ setIsOpen, OnCreateTask }: TaskModalProps) => {
 							className='deadline-input' 
 							type='datetime-local'  
 							value={taskCreateDate.taskDeadline}
-							onChange={setDeadlineData}
+							onChange={(event) => setTaskCreateData(prev => ({...prev, taskDeadline: event.target.value}))}
 							min={minDate}
 							placeholder=''/>
 						{error.deadline && <span className='error'>Enter deadline!</span>}
 						{error.deadlineBefore && <span className='error'>The time must be no later than {moment.tz(moment.tz.guess()).format('HH:mm')}!</span>}
+						{submitError && <span className='error'>{submitError}</span>}
 					</div>
 					<button 
 						type='submit'

@@ -4,60 +4,81 @@ import './App.css';
 import TaskModal from './TaskModal/TaskModal.tsx';
 import ActionWindow from './ActionWindow/ActionWindow.tsx';
 import TaskCreate from './TaskCreate/TaskCreate.tsx';
-import type { Task, FreezeTask } from './types.ts'
+import AuthForm from './AuthForm/AuthForm.tsx';
+import type { Task } from './types.ts';
+import type { AuthMode } from './AuthForm/AuthForm.tsx';
+import { getTask, deleteTask, freezeTask, createTask } from './api/tasks.ts';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { GetToken } from './api/client.ts';
+import { getMe } from './api/auth.ts';
 
 
 function App() {
-	const [isModalOpen, SetIsModalOpen] = useState(false);
-	const [tasks, setTasks] = useState<Task[]>([]);
-	const [freezeTasks, setFreezeTasks] = useState<FreezeTask[]>([]);
-	const [ActionDelete, SetActionDelete] = useState<Task | null>(null);
-	const [ActionMessenge, SetActionMessenge] = useState<string>('');
-	const handleCreateTask = ( task: Omit<Task, 'id'> ) => {
-		setTasks(prev => [...prev, {...task, id: crypto.randomUUID() }]);
-	}
+	const [isModalOpen, SetIsModalOpen] = useState<boolean>(false);
+	const [authMode, setAuthMode] = useState<AuthMode | null>(null);
+	const [actionDelete, setActionDelete] = useState<Task | null>(null);
+	const [actionMessenge, setActionMessenge] = useState<string>('');
 
-	const freezeTask = (id: string) => {
-		const taskToFreeze = tasks.find(task => task.id === id);
-		if (!taskToFreeze) return;
-		setTasks(prev => prev.filter(task => task.id !== id));
-		setFreezeTasks(prev => [...prev, {...taskToFreeze, frozenAt: Date.now()}]);
-	}
+	const queryClient = useQueryClient();
 
-	const unfreezeTask = (id: string) => {
-		const taskToUnfreeze = freezeTasks.find(task => task.id === id);
-		if (!taskToUnfreeze) return;
-		
-		const frozenDuration = Date.now() - taskToUnfreeze.frozenAt;
-		const newDeadline = new Date(
-			new Date(taskToUnfreeze.taskDeadline).getTime() + frozenDuration
-		).toISOString();
+	const { data: user } = useQuery({
+		queryKey: ['me'],
+		queryFn: getMe,
+		enabled: !!GetToken(),
+		retry: false
+	});
 
-		const {frozenAt, ...other} = taskToUnfreeze;
-		const newTask: Task = {...other, taskDeadline: newDeadline}
+	const isAuthenticated = !!GetToken();
 
-		setTasks(prev => [...prev, newTask]);
-		setFreezeTasks(prev => prev.filter(task => task.id !== id));
-	}
+	const { data: tasks = [], isLoading, isError, error} = useQuery({
+		queryKey: ['tasks'],
+		queryFn: getTask,
+		enabled: isAuthenticated,
+	});
 
-	const reqestDeleteTask = (id: string, messenge: string) => {
-		const task = tasks.find(tasks => tasks.id === id);
-		if (task) {
-			SetActionDelete(task);
-			SetActionMessenge(messenge);
-		}
+	const createMutation = useMutation({
+		mutationFn: createTask,
+		onSuccess: () => queryClient.invalidateQueries({ queryKey: ['tasks']})
+	});
 
-	}
+	const deleteMutation = useMutation({
+		mutationFn: deleteTask,
+		onSuccess: () => queryClient.invalidateQueries({ queryKey: ['tasks']})
+	});
+
+	const freezeMutation = useMutation({
+		mutationFn: freezeTask,
+		onSuccess: () => queryClient.invalidateQueries({ queryKey: ['tasks']})
+	});
+
+	const activeTask = tasks.filter(( t: Task) => !t.isFrozen);
+
+	const frozenTask = tasks.filter(( t: Task) => t.isFrozen);
 
 	const onConfirmAction = () => {
-		if (!ActionDelete) return;
-		setTasks(prev => prev.filter(task => task.id !== ActionDelete.id));
-		SetActionDelete(null);
-	}
+		if (!actionDelete) return;
+		deleteMutation.mutate(actionDelete.id);
+		setActionDelete(null);
+	};
 
 	const onCloseAction = () => {
-		SetActionDelete(null);
-	}
+		
+		setActionDelete(null);
+	};
+
+	const reqestDeleteTask = (id: string, messenge: string) => {
+		const task = tasks.find(t => t.id === id);
+		if (task) {
+			setActionDelete(task);
+			setActionMessenge(messenge);
+		}
+	};
+
+	const handleLogout = () => {
+		localStorage.removeItem('token');
+		queryClient.setQueryData(['me'], null);
+		queryClient.removeQueries({ queryKey: ['tasks'] });
+	};
 
 	return (
 		<main className='main'>
@@ -65,10 +86,18 @@ function App() {
 				<div className='header__inner'>
 					<h1 className='logo'>TaskBoard</h1>
 					<div className='user-info'>
-						{/* <div className='user__buttons'>
-							<button className='button'>Register</button>
-							<button className='button'>Login</button>
-						</div> */}
+						{user ? <div className='user-login'>
+							<span className='user-email'>{user.email}</span>
+							<button 
+								className='button'
+								onClick={handleLogout}
+								>
+							Log out</button>
+						</div>
+						:<div className='user__buttons'>
+							<button className='button' onClick={() => {setAuthMode('register')}}>Register</button>
+							<button className='button' onClick={() => {setAuthMode('login')}}>Login</button>
+						</div>}
 					</div>
 				</div>
 			</header>
@@ -77,7 +106,9 @@ function App() {
 				<div className='options__inner'>
 					<button 
 						className='button'
-						onClick={() => SetIsModalOpen(true)}
+						onClick={() => {
+							user ? SetIsModalOpen(true) : setAuthMode('login');
+						}}
 					>create task</button>
 				</div>
 			</section>
@@ -88,16 +119,24 @@ function App() {
 						<div className='boards__active board'>
 							<div className='active-header board-header'>Main Board</div>
 							<div className='active-container board-container'>
-								{tasks.map(task => (
+								{!isAuthenticated && <span className='message'>Log in to see your tasks</span>}
+								{isAuthenticated && isLoading && <span className='message'>Loading...</span>}
+								{isAuthenticated && isError && <span className='error'>
+									{error instanceof Error ? error.message : 'The tasks could not be loaded'}
+									</span>}
+								{isAuthenticated && !isLoading && !isError && activeTask.length === 0 &&
+									<span className='message'>There are no active tasks yet</span>}
+								{activeTask.map(task => (
 									<TaskCreate
 										key={task.id}
 										id = {task.id}
 										taskName={task.taskName}
 										taskInfo={task.taskInfo}
 										taskDeadline={task.taskDeadline}
-										onDelete = {reqestDeleteTask}
-										onFreeze={freezeTask}
+										onDelete = {(id, message) => reqestDeleteTask(id, message)}
+										onFreeze={(id) => freezeMutation.mutate(id)}
 										isFreeze = {false}
+										frozenAt = {task.frozenAt}
 										/>
 								))}
 							</div>
@@ -105,16 +144,18 @@ function App() {
 						<div className='boards__freeze board'>
 							<div className='freeze-header board-header'> Freeze Board</div>
 							<div className='freeze-container board-container'>
-								{freezeTasks.map(task => (
+								{isAuthenticated && frozenTask.length === 0 && <span className='message'>There are no freeze tasks yet</span>}
+								{frozenTask.map(task => (
 									<TaskCreate
 										key={task.id}
 										id = {task.id}
 										taskName={task.taskName}
 										taskInfo={task.taskInfo}
 										taskDeadline={task.taskDeadline}
-										onDelete = {reqestDeleteTask}
-										onFreeze={unfreezeTask}
+										onDelete = {(id) => deleteMutation.mutate(id)}
+										onFreeze={(id) => freezeMutation.mutate(id)}
 										isFreeze = {true}
+										frozenAt={task.frozenAt}
 										/>
 								))}
 							</div>
@@ -124,14 +165,22 @@ function App() {
 			</section>
 			{isModalOpen &&  <TaskModal 
 				setIsOpen = {SetIsModalOpen}
-				OnCreateTask = {handleCreateTask}/>}
+				OnCreateTask = {(id) => createMutation.mutate(id)}
+				submitError = {createMutation.isError ? (createMutation.error as Error).message : null}/>}
 			
-			{ActionDelete && <ActionWindow 
-				taskName = {ActionDelete.taskName}
+			{actionDelete && <ActionWindow 
+				taskName = {actionDelete.taskName}
 				OnClose = {onCloseAction}
 				OnConfirm={onConfirmAction}
-				messenge = {ActionMessenge}
+				messenge = {actionMessenge}
 				/>}
+			{authMode && <AuthForm
+				mode = {authMode}
+				onClose = {() => setAuthMode(null)}
+				onAuthSuccess = {(user) => {
+					queryClient.setQueryData(['me'], user)
+					setAuthMode(null)}}
+			/>}
 		</main>
 	);
 }
